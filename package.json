@@ -1,0 +1,245 @@
+{
+  "name": "ts-typebench",
+  "displayName": "ts-typebench",
+  "description": "TypeBox Workbench integrated int VsCode",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.81.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "TypeBench",
+      "properties": {
+        "TypeBench.extractor.extractors": {
+          "default": {
+            "ArkType": {
+              "autoUndo": true,
+              "commentOldTypes": false,
+              "extraction": "Identity",
+              "language": "typescript",
+              "target": "clipboard"
+            },
+            "IoTs": {
+              "autoUndo": false,
+              "commentOldTypes": true,
+              "extraction": "IoTs",
+              "language": "typescript",
+              "target": "inplace"
+            },
+            "TypeBox": {
+              "autoUndo": false,
+              "commentOldTypes": true,
+              "extraction": "TypeBox",
+              "language": "typescript",
+              "target": "inplace"
+            },
+            "Zod": {
+              "autoUndo": false,
+              "commentOldTypes": true,
+              "extraction": "Zod",
+              "language": "typescript",
+              "target": "inplace"
+            },
+            "Valibot": {
+              "autoUndo": false,
+              "commentOldTypes": true,
+              "extraction": "Valibot",
+              "language": "typescript",
+              "target": "inplace"
+            },
+            "Identity": {
+              "autoUndo": true,
+              "commentOldTypes": false,
+              "extraction": "Identity",
+              "language": "typescript",
+              "target": "clipboard"
+            },
+            "TypeScript": {
+              "autoUndo": true,
+              "commentOldTypes": false,
+              "extraction": "TypeScript",
+              "language": "typescript",
+              "target": "newDocument"
+            },
+            "Javascript": {
+              "autoUndo": true,
+              "commentOldTypes": false,
+              "extraction": "Javascript",
+              "language": "javascript",
+              "target": "newDocument"
+            },
+            "JsonSchema": {
+              "autoUndo": true,
+              "commentOldTypes": false,
+              "extraction": "JsonSchema",
+              "language": "typescript",
+              "target": "newDocument"
+            },
+            "SampleValue": {
+              "autoUndo": true,
+              "commentOldTypes": false,
+              "extraction": "SampleValue",
+              "language": "typescript",
+              "target": "newDocument"
+            }
+          },
+          "type": "object",
+          "properties": {},
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "extraction",
+              "commentOldTypes",
+              "target",
+              "language",
+              "autoUndo"
+            ],
+            "properties": {
+              "extraction": {
+                "type": "string",
+                "enum": [
+                  "ArkType",
+                  "IoTs",
+                  "TypeScript",
+                  "Javascript",
+                  "JsonSchema",
+                  "TypeBox",
+                  "SampleValue",
+                  "Zod",
+                  "Valibot",
+                  "Identity"
+                ]
+              },
+              "commentOldTypes": {
+                "type": "boolean"
+              },
+              "target": {
+                "type": "string",
+                "enum": [
+                  "clipboard",
+                  "inplace",
+                  "newDocument"
+                ]
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "typescript",
+                  "javascript",
+                  "text"
+                ]
+              },
+              "autoUndo": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "TypeBench.extractor.default": {
+          "type": "object",
+          "default": {
+            "extraction": "Identity",
+            "commentOldTypes": false,
+            "target": "clipboard",
+            "language": "typescript",
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "extraction",
+            "commentOldTypes",
+            "target",
+            "language",
+            "autoUndo"
+          ],
+          "properties": {
+            "extraction": {
+              "type": "string",
+              "enum": [
+                "ArkType",
+                "IoTs",
+                "TypeScript",
+                "Javascript",
+                "JsonSchema",
+                "TypeBox",
+                "SampleValue",
+                "Zod",
+                "Valibot",
+                "Identity"
+              ]
+            },
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "sinclair.text-edit",
+        "title": "TypeBench extract (default)",
+        "category": "TypeBench"
+      },
+      {
+        "command": "sinclair.text-edit.choose",
+        "title": "TypeBench extract ...",
+        "category": "TypeBench"
+      },
+      {
+        "command": "sinclair.undo-edit",
+        "title": "TypeBench undo",
+        "category": "TypeBench"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "20.2.5",
+    "@types/vscode": "^1.81.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.8",
+    "@typescript-eslint/parser": "^5.59.8",
+    "@vscode/test-electron": "^2.3.2",
+    "eslint": "^8.41.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "is-valid-identifier": "^2.0.2"
+  }
+}
