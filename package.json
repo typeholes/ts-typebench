@@ -1,14 +1,15 @@
 {
   "name": "ts-typebench",
   "displayName": "ts-typebench",
-  "description": "TypeBox Workbench integrated int VsCode",
-  "version": "0.0.1",
+  "description": "TypeBox Workbench integrated into VsCode",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.81.0"
   },
   "categories": [
     "Other"
   ],
+  "repository": "https://github.com/typeholes/ts-typebench",
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
