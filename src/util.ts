@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import { undoStack } from './undoStack';
+// import { Type } from '@sinclair/typebox';
 
 import _isValidIdentifier = require('is-valid-identifier');
 import { types } from 'util';
 import { maxTypes } from './config';
+import { getLibFiles } from './tsDirs';
 
 const isValidIdentifier = _isValidIdentifier as unknown as (
    text: string,
@@ -16,7 +18,7 @@ export type Result =
    | {
         name: string;
         position: vscode.Position;
-        fileName: string;
+        fileName: vscode.Uri;
         text: string;
         range: vscode.Range;
      }
@@ -39,7 +41,7 @@ export async function resolveTypeDeps(
    info: Result,
    editor: vscode.TextEditor,
    position: vscode.Position,
-   nameOffset: number
+   name: string
 ) {
    if (overMaxMode === 'abort') {
       overMaxMode = 'warn';
@@ -49,6 +51,14 @@ export async function resolveTypeDeps(
    if (info === undefined) {
       return;
    }
+
+   // ignore builtin TypeBox types - I don't think this is needed
+   // if (name in Type) {
+   //    types.set(name, undefined);
+   //    return;
+   // }
+
+   const nameOffset = name.length;
 
    const arr = info.text
       .split(/(\s|[^[A-Za-z_0-9$_]+)/)
@@ -87,7 +97,10 @@ export async function resolveTypeDeps(
                        def.targetUri,
                        def.targetSelectionRange ?? def.targetRange,
                     ];
-            const defDocument = await vscode.workspace.openTextDocument(defUri);
+            const defDocument = await openTextDocument(defUri);
+            if (!defDocument) {
+               return;
+            }
             const defEditor = await vscode.window.showTextDocument(
                defDocument
                // { preserveFocus: true }
@@ -98,7 +111,7 @@ export async function resolveTypeDeps(
             //    alias.text
             // );
 
-            const file = defDocument.fileName;
+            const file = defDocument.uri;
 
             const result = await getResult(types, defRange.start, file);
 
@@ -109,7 +122,7 @@ export async function resolveTypeDeps(
                result,
                defEditor,
                position,
-               result?.name.length ?? 0
+               result?.name ?? ''
             );
          }
       }
@@ -147,18 +160,18 @@ export function getOffsetOf(
 export async function commentOldTypes(types: Map<string, Result>) {
    for (const result of types.values()) {
       if (result) {
-         const document = await vscode.workspace.openTextDocument(
-            result.fileName
-         );
-         const editor = await vscode.window.showTextDocument(document);
-         commentRange(editor, result.range, document);
+         const document = await openTextDocument(result.fileName);
+         if (document) {
+            const editor = await vscode.window.showTextDocument(document);
+            commentRange(editor, result.range, document);
+         }
       }
    }
 }
 
 export async function onExpandedSelection(
    types: Map<string, Result>,
-   fileName: string,
+   fileName: vscode.Uri,
    position: vscode.Position,
    action: (
       editor: vscode.TextEditor,
@@ -168,7 +181,11 @@ export async function onExpandedSelection(
 ): Promise<Result | undefined> {
    let name = '';
 
-   const document = await vscode.workspace.openTextDocument(fileName);
+   const document = await openTextDocument(fileName);
+   if (!document) {
+      return Promise.resolve(undefined);
+   }
+
    undoStack.registerChange(document);
 
    const editor = await vscode.window.showTextDocument(document);
@@ -256,7 +273,7 @@ export function setOverMaxMode(mode: typeof overMaxMode) {
 export async function getResult(
    types: Map<string, Result>,
    namePosition: vscode.Position,
-   file: string
+   file: vscode.Uri
 ) {
    if (overMaxMode === 'warn' && types.size > maxTypes) {
       const choice = await vscode.window.showQuickPick(['Abort', 'Continue'], {
@@ -300,4 +317,16 @@ export function getRangeText(
    document: vscode.TextDocument
 ): Promise<string> {
    return Promise.resolve(document.getText(range.range));
+}
+
+async function openTextDocument(fileName: vscode.Uri) {
+   if (
+      getLibFiles().some((name) =>
+         fileName.fsPath.match(new RegExp(`lib\/${escapeRegExp(name)}`))
+      )
+   ) {
+      return undefined;
+   }
+   const document = await vscode.workspace.openTextDocument(fileName);
+   return document;
 }

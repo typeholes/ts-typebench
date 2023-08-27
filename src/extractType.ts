@@ -91,7 +91,7 @@ export async function extractType(
    undoStack.registerChange(textEditor.document);
 
    let namePosition = textEditor.selection.active;
-   const file = textEditor.document.fileName;
+   const file = textEditor.document.uri;
 
    const types = new Map<string, Result>();
 
@@ -124,7 +124,7 @@ export async function extractType(
       result,
       textEditor,
       namePosition,
-      result?.name.length ?? 0
+      result?.name ?? ''
    );
 
    const code = Array.from(types.values())

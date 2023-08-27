@@ -32,6 +32,8 @@ function getMaxTypes() {
    return maxTypes;
 }
 
+
+
 vscode.workspace.onDidChangeConfiguration(onChange);
 
 function onChange(event: vscode.ConfigurationChangeEvent) {

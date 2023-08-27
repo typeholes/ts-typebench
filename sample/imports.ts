@@ -6,6 +6,5 @@ export type C$B = {
 };
 
 
-type foo = Array<string>;
 
 

@@ -1,10 +1,12 @@
 import * as vscode from 'vscode';
 import { undoStack } from './undoStack';
 import { extractType, defaultExtractor, extractors } from './extractType';
-import { getDefaultExtractor, getExtractors } from './config';
+import { getExtractors } from './config';
 import { setOverMaxMode } from './util';
+import { getLibFiles } from './tsDirs';
 
 export function activate(context: vscode.ExtensionContext) {
+   
    getExtractors();
 
    {
