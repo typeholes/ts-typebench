@@ -15,6 +15,11 @@
     "configuration": {
       "title": "TypeBench",
       "properties": {
+        "TypeBench.maxTypes": {
+          "default": 100,
+          "type": "number",
+          "description": "guards against type extraction going off the rails"
+        },
         "TypeBench.extractor.extractors": {
           "default": {
             "ArkType": {
@@ -214,6 +219,11 @@
       {
         "command": "sinclair.undo-edit",
         "title": "TypeBench undo",
+        "category": "TypeBench"
+      },
+      {
+        "command": "sinclair.abort",
+        "title": "TypeBench abort extract",
         "category": "TypeBench"
       }
     ]

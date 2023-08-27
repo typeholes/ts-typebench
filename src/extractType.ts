@@ -22,6 +22,7 @@ import {
    Result,
    getRangeText,
    keywords,
+   setOverMaxMode,
 } from './util';
 
 const extractions = {
@@ -75,6 +76,8 @@ export async function extractType(
    textEditor: vscode.TextEditor,
    extract: Extractor
 ) {
+   setOverMaxMode('warn');
+
    if (
       extract.target === 'inplace' ||
       extract.commentOldTypes ||

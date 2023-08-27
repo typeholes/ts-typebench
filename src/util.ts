@@ -3,6 +3,7 @@ import { undoStack } from './undoStack';
 
 import _isValidIdentifier = require('is-valid-identifier');
 import { types } from 'util';
+import { maxTypes } from './config';
 
 const isValidIdentifier = _isValidIdentifier as unknown as (
    text: string,
@@ -40,6 +41,11 @@ export async function resolveTypeDeps(
    position: vscode.Position,
    nameOffset: number
 ) {
+   if (overMaxMode === 'abort') {
+      overMaxMode = 'warn';
+      throw new Error('Aborting TypeBench Extract');
+   }
+
    if (info === undefined) {
       return;
    }
@@ -242,11 +248,27 @@ async function commentRange(
    return 'commented';
 }
 
+let overMaxMode: 'warn' | 'ignore' | 'abort' = 'warn';
+export function setOverMaxMode(mode: typeof overMaxMode) {
+   overMaxMode = mode;
+}
+
 export async function getResult(
    types: Map<string, Result>,
    namePosition: vscode.Position,
    file: string
 ) {
+   if (overMaxMode === 'warn' && types.size > maxTypes) {
+      const choice = await vscode.window.showQuickPick(['Abort', 'Continue'], {
+         title: `More than ${maxTypes} checked. Things may have gone off the rails.`,
+      });
+      overMaxMode = choice === 'Continue' ? 'ignore' : 'abort';
+   }
+
+   if (overMaxMode === 'abort') {
+      overMaxMode = 'warn';
+      throw new Error('Aborting TypeBench Extract');
+   }
    let result = await onExpandedSelection(
       types,
       file,

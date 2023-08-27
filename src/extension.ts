@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { undoStack } from './undoStack';
 import { extractType, defaultExtractor, extractors } from './extractType';
 import { getDefaultExtractor, getExtractors } from './config';
+import { setOverMaxMode } from './util';
 
 export function activate(context: vscode.ExtensionContext) {
    getExtractors();
@@ -32,6 +33,13 @@ export function activate(context: vscode.ExtensionContext) {
       const disposable = vscode.commands.registerTextEditorCommand(
          'sinclair.undo-edit',
          undoStack.restore
+      );
+      context.subscriptions.push(disposable);
+   }
+
+   {
+      const disposable = vscode.commands.registerCommand('sinclair.abort', () =>
+         setOverMaxMode('abort')
       );
       context.subscriptions.push(disposable);
    }

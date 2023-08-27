@@ -5,3 +5,7 @@ export type C$B = {
     b: B,
 };
 
+
+type foo = Array<string>;
+
+

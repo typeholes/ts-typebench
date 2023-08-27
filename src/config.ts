@@ -9,6 +9,9 @@ import { omit, select } from './util';
 
 const DefaultKey = 'TypeBench.extractor.default';
 const ExtractorsKey = 'TypeBench.extractor.extractors';
+const MaxTypesKey = 'TypeBench.maxTypes';
+
+export let maxTypes = 100;
 
 export function getDefaultExtractor() {
    const setting = vscode.workspace.getConfiguration(DefaultKey);
@@ -22,6 +25,13 @@ export function getExtractors() {
    return setting;
 }
 
+function getMaxTypes() {
+   maxTypes =
+      vscode.workspace.getConfiguration('TypeBench').get('maxTypes') ?? 100;
+   console.log(maxTypes);
+   return maxTypes;
+}
+
 vscode.workspace.onDidChangeConfiguration(onChange);
 
 function onChange(event: vscode.ConfigurationChangeEvent) {
@@ -31,4 +41,9 @@ function onChange(event: vscode.ConfigurationChangeEvent) {
    if (event.affectsConfiguration(ExtractorsKey)) {
       getExtractors();
    }
+   if (event.affectsConfiguration(MaxTypesKey)) {
+      getMaxTypes();
+   }
 }
+
+getMaxTypes();
