@@ -2,4 +2,10 @@ type N = { n: number };
 
 type A = string;
 
-type B = { b: A };
+export type B = { b: A };
+
+
+export type C = {
+    s: 'A';
+    b: bigint;
+};

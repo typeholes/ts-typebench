@@ -21,14 +21,23 @@ export type Result =
      }
    | undefined;
 
-const keywords = ['export', 'type', 'interface'];
+const keywords = [
+   'export',
+   'type',
+   'interface',
+   'string',
+   'number',
+   'bigint',
+   'boolean',
+];
 
 export async function resolveTypeDeps(
    transformInterfaces: boolean,
    types: Map<string, Result | undefined>,
    info: Result,
    editor: vscode.TextEditor,
-   position: vscode.Position
+   position: vscode.Position,
+   nameOffset: number
 ) {
    if (info === undefined) {
       return;
@@ -50,6 +59,7 @@ export async function resolveTypeDeps(
          const defOffset = getOffsetOf(
             editor.document,
             position,
+            nameOffset,
             alias.text,
             'ignoreError'
          );
@@ -91,22 +101,30 @@ export async function resolveTypeDeps(
                types,
                result,
                defEditor,
-               position
+               position,
+               result?.name.length ?? 0
             );
          }
       }
    }
 }
 
+function escapeRegExp(s: string): string {
+   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 export function getOffsetOf(
    document: vscode.TextDocument,
    position: vscode.Position,
+   nameOffset: number,
    name: string,
    ignoreError: 'ignoreError' | undefined = undefined
 ) {
    const offset = document.offsetAt(position);
-   const text = document.getText().slice(offset);
-   const match = text.match(new RegExp(`^(.*)\\b${name}\\b`, 's'));
+   const text = document.getText().slice(offset + nameOffset);
+   const match = text.match(
+      new RegExp(`^(.*?)\\b${escapeRegExp(name)}\\b`, 's')
+   );
    if (!match) {
       if (ignoreError === undefined) {
          throw new Error(`alias text not found: ${name}`);
@@ -116,14 +134,16 @@ export function getOffsetOf(
    }
 
    const delta = match[0].length;
-   return offset + delta;
+   return offset + delta + nameOffset;
 }
 
 export async function commentOldTypes(types: Map<string, Result>) {
    for (const result of types.values()) {
       if (result) {
-            const document = await vscode.workspace.openTextDocument(result.fileName);
-            const editor = await vscode.window.showTextDocument(document);
+         const document = await vscode.workspace.openTextDocument(
+            result.fileName
+         );
+         const editor = await vscode.window.showTextDocument(document);
          commentRange(editor, result.range, document);
       }
    }

@@ -108,7 +108,8 @@ export async function extractType(
       types,
       result,
       textEditor,
-      namePosition
+      namePosition,
+      result?.name.length ?? 0
    );
 
    const code = Array.from(types.values())
