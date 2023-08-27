@@ -21,8 +21,9 @@ export type Result =
      }
    | undefined;
 
-const keywords = [
+export const keywords = [
    'export',
+   'import',
    'type',
    'interface',
    'string',

@@ -21,6 +21,7 @@ import {
    onExpandedSelection,
    Result,
    getRangeText,
+   keywords,
 } from './util';
 
 const extractions = {
@@ -87,7 +88,6 @@ export async function extractType(
    undoStack.registerChange(textEditor.document);
 
    let namePosition = textEditor.selection.active;
-   const offset = textEditor.document.offsetAt(namePosition);
    const file = textEditor.document.fileName;
 
    const types = new Map<string, Result>();
@@ -100,6 +100,18 @@ export async function extractType(
    );
 
    const name = result?.name;
+
+   if (name === '' || name === undefined) {
+      vscode.window.showErrorMessage(`no type name found at cursor`);
+      return;
+   }
+
+   if (keywords.includes(name ?? '')) {
+      vscode.window.showErrorMessage(
+         `Extract type must be run at a type name.  ran at ${name}`
+      );
+      return;
+   }
 
    result = await getResult(types, namePosition, file);
 
