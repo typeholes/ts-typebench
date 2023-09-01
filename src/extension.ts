@@ -6,8 +6,10 @@ import { setOverMaxMode } from './util';
 import { getLibFiles } from './tsDirs';
 
 export function activate(context: vscode.ExtensionContext) {
+
+   const foo = vscode.extensions.all;
    
-   getExtractors();
+
 
    {
       const disposable = vscode.commands.registerTextEditorCommand(

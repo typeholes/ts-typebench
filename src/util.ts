@@ -321,7 +321,7 @@ export function getRangeText(
 
 async function openTextDocument(fileName: vscode.Uri) {
    if (
-      getLibFiles().some((name) =>
+      (await getLibFiles()).some((name) =>
          fileName.fsPath.match(new RegExp(`lib\/${escapeRegExp(name)}`))
       )
    ) {
