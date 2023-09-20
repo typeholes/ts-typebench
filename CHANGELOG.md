@@ -21,3 +21,9 @@ Added
 Fixed
 
 -  fixed web extension
+
+## [0.0.9] - 2023-09-20
+
+Fixed
+
+-  fixed web extension, again
