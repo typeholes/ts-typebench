@@ -12,7 +12,7 @@
   "publisher": "typeholes",
   "repository": "https://github.com/typeholes/ts-typebench",
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./out/main.js",
   "contributes": {
     "configuration": {
       "title": "TypeBench",
@@ -22,165 +22,38 @@
           "type": "number",
           "description": "guards against type extraction going off the rails"
         },
-        "TypeBench.extractor.extractors": {
-          "default": {
-            "ArkType": {
-              "autoUndo": true,
-              "commentOldTypes": false,
-              "extraction": "Identity",
-              "language": "typescript",
-              "target": "clipboard"
-            },
-            "IoTs": {
-              "autoUndo": false,
-              "commentOldTypes": true,
-              "extraction": "IoTs",
-              "language": "typescript",
-              "target": "inplace"
-            },
-            "TypeBox": {
-              "autoUndo": false,
-              "commentOldTypes": true,
-              "extraction": "TypeBox",
-              "language": "typescript",
-              "target": "inplace"
-            },
-            "Zod": {
-              "autoUndo": false,
-              "commentOldTypes": true,
-              "extraction": "Zod",
-              "language": "typescript",
-              "target": "inplace"
-            },
-            "Valibot": {
-              "autoUndo": false,
-              "commentOldTypes": true,
-              "extraction": "Valibot",
-              "language": "typescript",
-              "target": "inplace"
-            },
-            "Identity": {
-              "autoUndo": true,
-              "commentOldTypes": false,
-              "extraction": "Identity",
-              "language": "typescript",
-              "target": "clipboard"
-            },
-            "TypeScript": {
-              "autoUndo": true,
-              "commentOldTypes": false,
-              "extraction": "TypeScript",
-              "language": "typescript",
-              "target": "newDocument"
-            },
-            "Javascript": {
-              "autoUndo": true,
-              "commentOldTypes": false,
-              "extraction": "Javascript",
-              "language": "javascript",
-              "target": "newDocument"
-            },
-            "JsonSchema": {
-              "autoUndo": true,
-              "commentOldTypes": false,
-              "extraction": "JsonSchema",
-              "language": "typescript",
-              "target": "newDocument"
-            },
-            "SampleValue": {
-              "autoUndo": true,
-              "commentOldTypes": false,
-              "extraction": "SampleValue",
-              "language": "typescript",
-              "target": "newDocument"
-            }
-          },
-          "type": "object",
-          "properties": {},
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "extraction",
-              "commentOldTypes",
-              "target",
-              "language",
-              "autoUndo"
-            ],
-            "properties": {
-              "extraction": {
-                "type": "string",
-                "enum": [
-                  "ArkType",
-                  "IoTs",
-                  "TypeScript",
-                  "Javascript",
-                  "JsonSchema",
-                  "TypeBox",
-                  "SampleValue",
-                  "Zod",
-                  "Valibot",
-                  "Identity"
-                ]
-              },
-              "commentOldTypes": {
-                "type": "boolean"
-              },
-              "target": {
-                "type": "string",
-                "enum": [
-                  "clipboard",
-                  "inplace",
-                  "newDocument"
-                ]
-              },
-              "language": {
-                "type": "string",
-                "enum": [
-                  "typescript",
-                  "javascript",
-                  "text"
-                ]
-              },
-              "autoUndo": {
-                "type": "boolean"
-              }
-            }
-          }
+        "TypeBench..default.extractor": {
+          "type": "string",
+          "enum": [
+            "ArkType",
+            "IoTs",
+            "TypeScript",
+            "Javascript",
+            "JsonSchema",
+            "TypeBox",
+            "SampleValue",
+            "Zod",
+            "Valibot",
+            "Identity"
+          ],
+          "default": "Identity"
         },
-        "TypeBench.extractor.default": {
+        "TypeBench.extractor.ArkType": {
           "type": "object",
           "default": {
-            "extraction": "Identity",
-            "commentOldTypes": false,
             "target": "clipboard",
             "language": "typescript",
+            "commentOldTypes": false,
             "autoUndo": false
           },
           "additionalProperties": false,
           "required": [
-            "extraction",
-            "commentOldTypes",
             "target",
             "language",
+            "commentOldTypes",
             "autoUndo"
           ],
           "properties": {
-            "extraction": {
-              "type": "string",
-              "enum": [
-                "ArkType",
-                "IoTs",
-                "TypeScript",
-                "Javascript",
-                "JsonSchema",
-                "TypeBox",
-                "SampleValue",
-                "Zod",
-                "Valibot",
-                "Identity"
-              ]
-            },
             "commentOldTypes": {
               "type": "boolean"
             },
@@ -197,6 +70,376 @@
               "enum": [
                 "typescript",
                 "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.IoTs": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.TypeScript": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.Valibot": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.Javascript": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.JsonSchema": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.TypeBox": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.SampleValue": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.Zod": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
+                "text"
+              ]
+            },
+            "autoUndo": {
+              "type": "boolean"
+            }
+          }
+        },
+        "TypeBench.extractor.Identity": {
+          "type": "object",
+          "default": {
+            "target": "clipboard",
+            "language": "typescript",
+            "commentOldTypes": false,
+            "autoUndo": false
+          },
+          "additionalProperties": false,
+          "required": [
+            "target",
+            "language",
+            "commentOldTypes",
+            "autoUndo"
+          ],
+          "properties": {
+            "commentOldTypes": {
+              "type": "boolean"
+            },
+            "target": {
+              "type": "string",
+              "enum": [
+                "clipboard",
+                "inplace",
+                "newDocument"
+              ]
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "typescript",
+                "javascript",
+                "json",
                 "text"
               ]
             },
@@ -234,8 +477,7 @@
     "vscode:prepublish": "npm run esbuild-base -- --minify",
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "test-compile": "tsc -p ./"
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",

@@ -36,7 +36,6 @@ export const keywords = [
 ];
 
 export async function resolveTypeDeps(
-   transformInterfaces: boolean,
    types: Map<string, Result | undefined>,
    info: Result,
    editor: vscode.TextEditor,
@@ -117,7 +116,6 @@ export async function resolveTypeDeps(
 
             types.set(alias.text, result);
             await resolveTypeDeps(
-               transformInterfaces,
                types,
                result,
                defEditor,
@@ -329,4 +327,16 @@ async function openTextDocument(fileName: vscode.Uri) {
    }
    const document = await vscode.workspace.openTextDocument(fileName);
    return document;
+}
+
+export function merge(a: {}, b: {}) {
+   if (typeof a === 'object' && typeof b === 'object') {
+      for (const k in a) {
+         //@ts-expect-error
+         a[k] = merge(a[k], b[k]);
+      }
+      return a;
+   } else {
+      return b ?? a;
+   }
 }

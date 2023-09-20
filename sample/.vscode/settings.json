@@ -1,0 +1,6 @@
+{
+   "TypeBench.extractor.ArkType": {
+      "target": "newDocument",
+      "commentOldTypes": true
+   }
+}

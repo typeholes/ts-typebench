@@ -17,3 +17,4 @@ type Bar = string[];
 type Constructor = 'hmm';
 
 type Cons = Constructor;
+

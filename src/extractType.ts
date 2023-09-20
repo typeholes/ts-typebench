@@ -24,8 +24,9 @@ import {
    keywords,
    setOverMaxMode,
 } from './util';
+import { getExtractors } from './config';
 
-const extractions = {
+export const extractions = {
    ArkType: mkTypeBenchExtract(ModelToArkType),
    IoTs: mkTypeBenchExtract(ModelToIoTs),
    TypeScript: mkTypeBenchExtract(ModelToTypeScript),
@@ -35,30 +36,30 @@ const extractions = {
    TypeBox: { transform: TypeScriptToTypeBox.Generate },
    SampleValue: mkTypeBenchExtract(ModelToValue),
    Zod: mkTypeBenchExtract(ModelToZod),
-   Interfaces2Types: { transform: (code: string) => code },
    Identity: { transform: (code: string) => code },
 } as const;
 
+export type Language = 'typescript' | 'js' | 'text' | 'json';
+
 export const defaultExtractor = {
    extraction: 'Identity' as keyof typeof extractions,
-   interfaces2types: true,
    commentOldTypes: false,
    target: 'newDocument' as 'clipboard' | 'inplace' | 'newDocument',
-   language: 'typescript',
+   language: 'typescript' as Language,
    autoUndo: true,
 };
 
-export type Extractor = typeof defaultExtractor;
+export type Extractor = {
+   target: 'clipboard' | 'inplace' | 'newDocument';
+   language: Language;
+   commentOldTypes: boolean;
+   autoUndo: boolean;
+};
 
 export function setDefaultExtractor(values: Extractor) {
    Object.assign(defaultExtractor, values);
 }
 
-export const extractors: Record<string, Extractor> = {};
-
-export function setExtractors(values: Record<string, Extractor>) {
-   Object.assign(extractors, values);
-}
 
 function mkTypeBenchExtract(generator: {
    Generate: (m: TypeBoxModel) => string;
@@ -74,14 +75,16 @@ function mkTypeBenchExtract(generator: {
 
 export async function extractType(
    textEditor: vscode.TextEditor,
-   extract: Extractor
+   extractionName: keyof typeof extractions
 ) {
    setOverMaxMode('warn');
+
+   const extract = getExtractors()[extractionName];
+
 
    if (
       extract.target === 'inplace' ||
       extract.commentOldTypes ||
-      extract.interfaces2types ||
       extract.autoUndo
    ) {
       undoStack.track();
@@ -119,7 +122,6 @@ export async function extractType(
    result = await getResult(types, namePosition, file);
 
    await resolveTypeDeps(
-      extract.interfaces2types,
       types,
       result,
       textEditor,
@@ -133,7 +135,7 @@ export async function extractType(
       .map((info) => info?.text)
       .join('\n\n');
 
-   const newCode = extractions[extract.extraction].transform(code);
+   const newCode = extractions[extractionName].transform(code);
 
    if (extract.commentOldTypes) {
       await commentOldTypes(types);

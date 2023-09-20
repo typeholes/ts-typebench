@@ -1,20 +1,16 @@
 import * as vscode from 'vscode';
 import { undoStack } from './undoStack';
-import { extractType, defaultExtractor, extractors } from './extractType';
-import { getExtractors } from './config';
+import { extractType, defaultExtractor } from './extractType';
+import { getExtractors, updatePackage } from './config';
 import { setOverMaxMode } from './util';
-import { getLibFiles } from './tsDirs';
 
-export function activate(context: vscode.ExtensionContext) {
-
-   const foo = vscode.extensions.all;
-   
-
+export async function activate(context: vscode.ExtensionContext) {
+   await updatePackage(context);
 
    {
       const disposable = vscode.commands.registerTextEditorCommand(
          'sinclair.text-edit',
-         (editor) => extractType(editor, defaultExtractor)
+         (editor) => extractType(editor, defaultExtractor.extraction)
       );
       context.subscriptions.push(disposable);
    }
@@ -23,9 +19,10 @@ export function activate(context: vscode.ExtensionContext) {
       const disposable = vscode.commands.registerTextEditorCommand(
          'sinclair.text-edit.choose',
          (editor) => {
+            const extractors = getExtractors();
             vscode.window.showQuickPick(Object.keys(extractors)).then((key) => {
                if (key && key in extractors) {
-                  extractType(editor, extractors[key]);
+                  extractType(editor, key as never);
                }
             });
          }
