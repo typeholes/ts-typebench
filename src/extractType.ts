@@ -60,7 +60,6 @@ export function setDefaultExtractor(values: Extractor) {
    Object.assign(defaultExtractor, values);
 }
 
-
 function mkTypeBenchExtract(generator: {
    Generate: (m: TypeBoxModel) => string;
 }) {
@@ -80,7 +79,6 @@ export async function extractType(
    setOverMaxMode('warn');
 
    const extract = getExtractors()[extractionName];
-
 
    if (
       extract.target === 'inplace' ||
